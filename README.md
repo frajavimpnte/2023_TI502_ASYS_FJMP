@@ -1,2 +1,2 @@
-# 2023_ITESS_302_MPTD
-2023 ITESS-TICS-TI302 Matemáticas para la toma de decisiones 
+# 2023_TI502_ASYS_FJMP
+2023 ITESS-TICS Análisis de señales y sistemas de comunicación
