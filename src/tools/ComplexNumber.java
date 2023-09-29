@@ -1,7 +1,11 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+ * ITESS-TICS-TI502-ASYSC
+ * Agosto-Diciembre 2023
+ * U1. Introudcción
+ * Descripsión: Analisis complejo Test
+ * by FJMP 
+ * 29/09/2023
+*/
 package tools;
 
 import java.util.ArrayList;
@@ -93,7 +97,7 @@ public class ComplexNumber {
         float m = mod();
         float th = angle();
         
-        return m + " CIS " + th;
+        return m + " CIS " + (float)(th* 180.0/Math.PI);
     }
     @Override
     public String toString() {
