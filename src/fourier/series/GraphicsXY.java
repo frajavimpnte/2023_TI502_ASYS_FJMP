@@ -16,9 +16,24 @@ import java.awt.Graphics2D;
  * @author TICS03
  */
 public class GraphicsXY extends javax.swing.JFrame {
-   
+    private Coordinate coordinate;
+    private Coordinate coordinateF;
+    TP02_15_triangular sf;
+    
     public GraphicsXY() {
-        initComponents();        
+        initComponents();
+        
+        coordinate = new Coordinate();
+        coordinateF = new Coordinate();
+        coordinateF.setYMIN(0);
+        coordinateF.setYMAX(1.5f);
+        
+        //SquaredFunction sf = new SquaredFunction(1.0f, 100);
+                
+        //sf.computeTime();
+        //sf.computeSerie(N);
+        
+        sf = new TP02_15_triangular((float)(2*Math.PI), 100);
     }
 
     /**
@@ -34,6 +49,7 @@ public class GraphicsXY extends javax.swing.JFrame {
         btnDraw = new javax.swing.JButton();
         lbNaprox = new javax.swing.JLabel();
         tfNAproximation = new javax.swing.JTextField();
+        pnlDrawEspectrum = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -55,7 +71,7 @@ public class GraphicsXY extends javax.swing.JFrame {
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
-        getContentPane().add(pnlDraw, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, 300, 300));
+        getContentPane().add(pnlDraw, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 300, 300));
 
         btnDraw.setText("Draw");
         btnDraw.addActionListener(new java.awt.event.ActionListener() {
@@ -76,6 +92,19 @@ public class GraphicsXY extends javax.swing.JFrame {
         });
         getContentPane().add(tfNAproximation, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 70, 50, -1));
 
+        javax.swing.GroupLayout pnlDrawEspectrumLayout = new javax.swing.GroupLayout(pnlDrawEspectrum);
+        pnlDrawEspectrum.setLayout(pnlDrawEspectrumLayout);
+        pnlDrawEspectrumLayout.setHorizontalGroup(
+            pnlDrawEspectrumLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+        pnlDrawEspectrumLayout.setVerticalGroup(
+            pnlDrawEspectrumLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(pnlDrawEspectrum, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 130, 300, 300));
+
         setBounds(0, 0, 656, 488);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -87,85 +116,147 @@ public class GraphicsXY extends javax.swing.JFrame {
         
         g.setColor(Color.white);
         
-        // draw x axis, from  (0,0) to  (20, 0)  
+        // draw x axis, from  (XMIN,0) to  (XMAX, 0)  
         g.drawLine(
-                Coordinate.toScreenX(Coordinate.XMIN),
-                Coordinate.toScreenY(0.0f),
-                Coordinate.toScreenX(Coordinate.XMAX),
-                Coordinate.toScreenY(0.0f)
+                coordinate.toScreenX(coordinate.getXMIN()),
+                coordinate.toScreenY(0.0f),
+                coordinate.toScreenX(coordinate.getXMAX()),
+                coordinate.toScreenY(0.0f)
         );
         
-        for (float dx = Coordinate.XMIN; dx < Coordinate.XMAX; dx += 1.0) {
+        for (float dx = coordinate.getXMIN(); dx < coordinate.getXMAX(); dx += 1.0) {
             g.drawLine(
-                Coordinate.toScreenX(dx),
-                Coordinate.toScreenY(0),
-                Coordinate.toScreenX(dx),
-                Coordinate.toScreenY(0.5f)
+                coordinate.toScreenX(dx),
+                coordinate.toScreenY(0),
+                coordinate.toScreenX(dx),
+                coordinate.toScreenY(0.5f)
             );
         }
         
-        // draw y axis, from  (0,0) to  (0, 20)  
+        // draw y axis, from  (0,YMIN) to  (0, YMAX)  
         g.drawLine(
-                Coordinate.toScreenX(0.0f),
-                Coordinate.toScreenY(Coordinate.YMIN),
-                Coordinate.toScreenX(0.00f),
-                Coordinate.toScreenY(Coordinate.YMAX)
+                coordinate.toScreenX(0.0f),
+                coordinate.toScreenY(coordinate.getYMIN()),
+                coordinate.toScreenX(0.00f),
+                coordinate.toScreenY(coordinate.getYMAX())
         );
         
-        for (float dy = Coordinate.YMIN; dy < Coordinate.YMAX; dy += 1.0) {
+        for (float dy = coordinate.getYMIN(); dy < coordinate.getYMAX(); dy += 1.0) {
             g.drawLine(
-                Coordinate.toScreenX(0),
-                Coordinate.toScreenY(dy),
-                Coordinate.toScreenX(0.5f),
-                Coordinate.toScreenY(dy)
+                coordinate.toScreenX(0),
+                coordinate.toScreenY(dy),
+                coordinate.toScreenX(0.5f),
+                coordinate.toScreenY(dy)
             );
         } 
     }
     
-    private void drawFunction(int N) {
-        //SquaredFunction sf = new SquaredFunction(1.0f, 100);
-                
-        //sf.computeTime();
-        //sf.computeSerie(N);
-        
-        TP02_15_triangular sf = new TP02_15_triangular((float)(2*Math.PI), 100);
-                
-        sf.computeTime();
-        sf.computeSerie(N);
-        
+    private void drawFunction() {
         float x[] = sf.getTime();
         float y[] = sf.getSerie();
       
-
         // Draw function points
          Graphics2D g = (Graphics2D) pnlDraw.getGraphics();
          g.setColor(Color.white);         
          for (int i = 0; i < x.length - 1; i++) {
              g.drawLine(
-                Coordinate.toScreenX(x[i]),
-                Coordinate.toScreenY(y[i]),
-                Coordinate.toScreenX(x[i+1]),
-                Coordinate.toScreenY(y[i+1])
+                coordinate.toScreenX(x[i]),
+                coordinate.toScreenY(y[i]),
+                coordinate.toScreenX(x[i+1]),
+                coordinate.toScreenY(y[i+1])
+            );
+         }
+    }
+    
+    private void drawAxisF() {
+        Graphics2D g = (Graphics2D) pnlDrawEspectrum.getGraphics();
+      
+        g.setColor(new Color(50, 90, 20));
+        g.fillRect(0,0, 300, 300);
+        
+        g.setColor(Color.white);
+        
+        // draw x axis, from  (0,0) to  (freqMAX, 0)
+        float freq[] = sf.getFreq();
+        coordinateF.setXMIN(0);
+        coordinateF.setXMAX(freq[freq.length - 1]);
+        g.drawLine(
+                coordinateF.toScreenX(coordinateF.getXMIN()),
+                coordinateF.toScreenY(0.0f),
+                coordinateF.toScreenX(coordinateF.getXMAX()),
+                coordinateF.toScreenY(0.0f)
+        );
+        
+        for (float dx = coordinateF.getXMIN(); dx < coordinateF.getXMAX(); dx += 1.0) {
+            g.drawLine(
+                coordinateF.toScreenX(dx),
+                coordinateF.toScreenY(0),
+                coordinateF.toScreenX(dx),
+                coordinateF.toScreenY(0.5f)
+            );
+        }
+        
+        // draw y axis, from  (0,YMIN) to  (0, YMAX)
+       
+        g.drawLine(
+                coordinateF.toScreenX(0.0f),
+                coordinateF.toScreenY(coordinateF.getYMIN()),
+                coordinateF.toScreenX(0.00f),
+                coordinateF.toScreenY(coordinateF.getYMAX())
+        );
+        
+        for (float dy = coordinateF.getYMIN(); dy < coordinateF.getYMAX(); dy += 1.0) {
+            g.drawLine(
+                coordinateF.toScreenX(0),
+                coordinateF.toScreenY(dy),
+                coordinateF.toScreenX(0.5f),
+                coordinateF.toScreenY(dy)
+            );
+        } 
+    }
+    
+      private void drawFunctionF() {
+        float x[] = sf.getFreq();
+        float y[] = sf.getE();
+      
+
+        // Draw function points
+         Graphics2D g = (Graphics2D) pnlDrawEspectrum.getGraphics();
+         g.setColor(Color.white);         
+         for (int i = 0; i < x.length - 1; i++) {
+             g.drawLine(
+                coordinateF.toScreenX(x[i]),
+                coordinateF.toScreenY(y[i]),
+                coordinateF.toScreenX(x[i+1]),
+                coordinateF.toScreenY(y[i+1])
             );
          }
     }
     
     private void pnlDrawMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlDrawMouseClicked
         // TODO add your handling code here:
-        int Naprox =  Integer.parseInt( 
-                tfNAproximation.getText()
-            );
-        drawAxis();
-        drawFunction(Naprox);
+       draw();
     }//GEN-LAST:event_pnlDrawMouseClicked
 
-    private void btnDrawActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDrawActionPerformed
-        // TODO add your handling code here:
-        int Naprox =  Integer.parseInt( 
+    private void draw() {
+     int Naprox =  Integer.parseInt( 
                 tfNAproximation.getText()
             );
+        sf.computeTime();
+        sf.computeSerie(Naprox);
         drawAxis();
-        drawFunction(Naprox);
+        drawFunction();
+        
+        sf.computeEspectrum();
+        sf.computeFrequency();
+        
+        drawAxisF();
+        drawFunctionF();
+    }
+    
+    private void btnDrawActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDrawActionPerformed
+        // TODO add your handling code here:
+        draw();
     }//GEN-LAST:event_btnDrawActionPerformed
 
     private void tfNAproximationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNAproximationActionPerformed
@@ -212,6 +303,7 @@ public class GraphicsXY extends javax.swing.JFrame {
     private javax.swing.JButton btnDraw;
     private javax.swing.JLabel lbNaprox;
     private javax.swing.JPanel pnlDraw;
+    private javax.swing.JPanel pnlDrawEspectrum;
     private javax.swing.JTextField tfNAproximation;
     // End of variables declaration//GEN-END:variables
 }
